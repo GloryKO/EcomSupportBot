@@ -44,7 +44,7 @@ cd ECOM-BOT
 
 2. Create a virtual environment:
 ```bash
-python -m venv env
+python -m venv env (or python3 -m venv env)
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
