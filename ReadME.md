@@ -22,16 +22,17 @@ his project is a Streamlit-based chatbot designed to assist users with inquiries
 
 
 ## Project Structure
-
 ECOM-BOT/
 │
-├── chat.py   # this is the main file to run the application
-|-- evaluator.py    #contains the evaluator class that evaluates the model based on it's responses(used in the chat.py file)
-|-- ecom_support.py   # contains the main project class used by the chat.py
-├── requirements.txt       # project dependencies
-├── README.md              # Project documentation       
-├── .streamlit/secrets.toml                #cthis is where you place your Gemini API key
-└── screenshots      # a folder containing scressnshots of the application durng testing
+├── chat.py                 # Main file to run the application
+├── evaluator.py            # Contains the Evaluator class that evaluates the model based on its responses (used in chat.py)
+├── ecom_support.py         # Contains the main project class used by chat.py
+├── requirements.txt        # Project dependencies
+├── README.md               # Project documentation
+├── .streamlit/
+│   └── secrets.toml        # Place your Gemini API key here
+└── screenshots/            # Folder for project screenshots
+
 
 
 ## Installation
@@ -44,7 +45,7 @@ cd ECOM-BOT
 
 2. Create a virtual environment:
 ```bash
-python -m venv env
+python -m venv env (or python3 -m venv env)
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 

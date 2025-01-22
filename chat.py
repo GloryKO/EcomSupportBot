@@ -9,15 +9,21 @@ def create_streamlit_ui():
     
     # Initialize session state
     if 'support_agent' not in st.session_state:
-        api_key = st.secrets.get("GEMINI_API_KEY", None)
-        if api_key:
-            st.session_state.support_agent = EcommerceSupport(api_key)
-            st.session_state.evaluator = ChatbotEvaluator()  # Initialize evaluator
+        # Get both API keys from Streamlit secrets
+        gemini_api_key = st.secrets.get("GEMINI_API_KEY", None)
+        openai_api_key = st.secrets.get("OPENAI_API_KEY", None)
+        
+        if gemini_api_key:
+            st.session_state.support_agent = EcommerceSupport(api_key=gemini_api_key, model_type="gemini")
+            st.session_state.evaluator = ChatbotEvaluator() 
+
+        elif openai_api_key:
+            st.session_state.support_agent = EcommerceSupport(api_key=openai_api_key, model_type="openai")
+            st.session_state.evaluator = ChatbotEvaluator() 
         else:
-            st.error("Please set the GEMINI_API_KEY in your Streamlit secrets.")
+            st.error("Please set either GEMINI_API_KEY or OPENAI_API_KEY in your Streamlit secrets.")
             return
     
-    # Initialize messages if not in session state
     if 'messages' not in st.session_state:
         st.session_state.messages = []
 
@@ -38,7 +44,6 @@ def create_streamlit_ui():
 
     # Chat input
     if prompt := st.chat_input("Type your message here..."):
-        # Record start time
         start_time = datetime.now()
         
         # Add user message to chat
