@@ -23,7 +23,7 @@ his project is a Streamlit-based chatbot designed to assist users with inquiries
 
 ## Project Structure
 
-ecommerce-chatbot/
+ECOM-BOT/
 │
 ├── chat.py   # this is the main file to run the application
 |-- evaluator.py    #contains the evaluator class that evaluates the model based on it's responses(used in the chat.py file)
