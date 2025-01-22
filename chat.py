@@ -11,7 +11,7 @@ def create_streamlit_ui():
     if 'support_agent' not in st.session_state:
         api_key = st.secrets.get("GEMINI_API_KEY", None)
         if api_key:
-            st.session_state.support_agent = EcommerceSupport(api_key)
+            st.session_state.support_agent = EcommerceSupport(api_key=api_key,model_type="gemini")
             st.session_state.evaluator = ChatbotEvaluator()  # Initialize evaluator
         else:
             st.error("Please set the GEMINI_API_KEY in your Streamlit secrets.")

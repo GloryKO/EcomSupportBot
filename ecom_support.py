@@ -10,21 +10,37 @@ from langchain.prompts import PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 from evaluator import ChatbotEvaluator
-
+from langchain_openai import ChatOpenAI
 class EcommerceSupport:
-    def __init__(self, api_key: str):
+    def __init__(self, model_type:str, api_key: str):
         """Initialize the support system with LangChain components."""
         # Configure Gemini
         genai.configure(api_key=api_key)
         
         # Initialize LangChain chat model
-        self.llm = ChatGoogleGenerativeAI(
-            model="gemini-pro",
-            temperature=0.3,
-            google_api_key=api_key,
-            convert_system_message_to_human=True
-        )
+        # self.llm = ChatGoogleGenerativeAI(
+        #     model="gemini-pro",
+        #     temperature=0.3,
+        #     google_api_key=api_key,
+        #     convert_system_message_to_human=True
+        # )
+        self.model_type = model_type.lower()
         
+        # Configure the appropriate model based on user input
+        if self.model_type == "gemini":
+            genai.configure(api_key=api_key)
+            self.llm = ChatGoogleGenerativeAI(
+                model="gemini-pro",
+                temperature=0.3,
+                google_api_key=api_key,
+                convert_system_message_to_human=True
+            )
+        elif self.model_type == "openai":
+            self.llm = ChatOpenAI(api_key=api_key, temperature=0.3)
+        # elif self.model_type == "cohere":
+        #     self.llm = ChatCohere(api_key=api_key, temperature=0.3)
+        else:
+            raise ValueError("Unsupported model type. Please use 'gemini', 'openai', or 'cohere'.")
         # Define conversation memory
         self.memory = ConversationBufferWindowMemory(
             k=5,
