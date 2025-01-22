@@ -37,10 +37,8 @@ class ChatbotEvaluator:
             'metrics': {}
         }
 
-        # Evaluate accuracy
         accuracy = self._evaluate_accuracy(user_input, bot_response)
         
-        # Evaluate relevance
         relevance = self._evaluate_relevance(user_input, bot_response)
         
         # Calculate response time score (1-5 scale)
