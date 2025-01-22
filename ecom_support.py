@@ -17,13 +17,6 @@ class EcommerceSupport:
         # Configure Gemini
         genai.configure(api_key=api_key)
         
-        # Initialize LangChain chat model
-        # self.llm = ChatGoogleGenerativeAI(
-        #     model="gemini-pro",
-        #     temperature=0.3,
-        #     google_api_key=api_key,
-        #     convert_system_message_to_human=True
-        # )
         self.model_type = model_type.lower()
         
         # Configure the appropriate model based on user input
@@ -37,8 +30,7 @@ class EcommerceSupport:
             )
         elif self.model_type == "openai":
             self.llm = ChatOpenAI(api_key=api_key, temperature=0.3)
-        # elif self.model_type == "cohere":
-        #     self.llm = ChatCohere(api_key=api_key, temperature=0.3)
+       
         else:
             raise ValueError("Unsupported model type. Please use 'gemini', 'openai', or 'cohere'.")
         # Define conversation memory
