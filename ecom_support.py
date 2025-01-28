@@ -63,10 +63,10 @@ class EcommerceSupport:
         # Setup conversation prompt template
         self.template = """You are a helpful e-commerce customer support agent. Use the following rules:
         1. Be polite and professional
-        2. For order status queries, ask for the order ID if not provided
+        2. For order status queries, ask for the order ID if not provided (if the order id provided cant be found, just say that, dont assume)
         3. For human representative requests, ask for name, email, and phone number
         4. For return policy questions, provide accurate information from the stored policies
-        5. Keep responses concise but informative
+        5. Keep responses concise but informative and within context
 
         Current conversation:
         {chat_history}
@@ -172,28 +172,3 @@ class EcommerceSupport:
                 return "Thank you! Your information has been saved. A customer service representative will contact you shortly."
             return "That doesn't look like a valid phone number. Please provide a valid phone number."
 
-    def process_message(self, message: str) -> str:
-        """Process message using LangChain conversation chain."""
-        # Handle ongoing contact collection
-        if self.collecting_contact:
-            return self.handle_contact_collection(message)
-
-        # Direct order ID check
-        if "ORD" in message:
-            order_id = message[message.find("ORD"):message.find("ORD")+6]
-            if order_id in self.order_database:
-                return self.check_order_status(order_id)
-        
-        # Get response from conversation chain
-        response = self.conversation.predict(input=message)
-        
-        # Check for special commands
-        if "CHECK_ORDER:" in response:
-            order_id = response.split(":")[1].strip()
-            return self.check_order_status(order_id)
-        
-        if "COLLECT_CONTACT" in response:
-            self.collecting_contact = True
-            return "I'll connect you with a customer service representative. First, please provide your full name."
-            
-        return response

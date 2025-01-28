@@ -95,6 +95,10 @@ Start the Streamlit interface:
 ```bash
 streamlit run chat.py
 ```
+Run unit tests
+
+```python -m unittest test.py
+```
 
 The chatbot will be available at `http://localhost:8501`
 
