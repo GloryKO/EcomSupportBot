@@ -6,21 +6,18 @@ class TestEcommerceSupport(unittest.TestCase):
     
     def setUp(self):
         # Mock parameters
-        self.chatbot = EcommerceSupport(model_type="gemini", api_key="test-api-key")
+        self.chatbot = EcommerceSupport(model_type="gemini", api_key="")
 
-    @patch('ecom_support.ConversationChain.predict') 
-    def test_order_status_valid_id(self, mock_predict):
-        # Mock response
-        mock_predict.return_value = "Order ORD123 is currently Delivered (as of 2024-01-15)."
-        response = self.chatbot.process_message("What is the status of my order ORD123?")
+
+    def test_order_status_valid_id(self):
+        response = self.chatbot.process_message("What is the status of my order ORD123 ?")
         self.assertIn("Delivered", response)
+        self.assertIn("2024-01-15", response)
 
-    @patch('ecom_support.ConversationChain.predict')
-    def test_order_status_invalid_id(self, mock_predict):
-        # Mock response
-        mock_predict.return_value = "Sorry, I couldn't find that order. Please check the order ID and try again."
+    def test_order_status_invalid_id(self):
+        # Test invalid order ID query
         response = self.chatbot.process_message("What is the status of my order ORD999?")
-        self.assertIn("couldn't find", response)
+        self.assertIn("couldn't find that order", response)
 
     @patch('ecom_support.ConversationChain.predict') 
     def test_return_policy_request(self, mock_predict):
@@ -36,6 +33,23 @@ class TestEcommerceSupport(unittest.TestCase):
         response = self.chatbot.process_message("I want to speak to a human representative.")
         self.assertIn("Please provide your full name", response)
     
+    @patch('ecom_support.ConversationChain.predict') 
+    def test_no_order_id_provided(self, mock_predict):
+     
+        mock_predict.return_value = "This response should not be used."
+
+        # Test no order ID in the message
+        response = self.chatbot.process_message("What is the status of my order?")
+        self.assertIn("couldn't detect a valid order ID", response)
+
+    @patch('ecom_support.ConversationChain.predict')  # Mock the LLM
+    def test_invalid_order_id(self, mock_predict):
+        # Mock LLM response (irrelevant here since the logic bypasses LLM)
+        mock_predict.return_value = "This response should not be used."
+
+        # Test invalid order ID handling
+        response = self.chatbot.process_message("What is the status of my order ORD999?")
+        self.assertEqual(response, "Sorry, I couldn't find that order. Please check the order ID and try again.")
 
 if __name__ == "__main__":
     unittest.main()

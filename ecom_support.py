@@ -119,21 +119,26 @@ class EcommerceSupport:
 
     def process_message(self, message: str) -> str:
         """Process message using LangChain conversation chain."""
-        # Direct order ID check
-        if "ORD" in message:
-            order_id = message[message.find("ORD"):message.find("ORD")+6]
-            if order_id in self.order_database:
-                return self.check_order_status(order_id)
-        
-        # Get response from conversation chain
-        response = self.conversation.predict(input=message)
-        
-        # Check if response contains order check command
-        if "CHECK_ORDER:" in response:
-            order_id = response.split(":")[1].strip()
-            return self.check_order_status(order_id)
+        # Directly handle order ID queries
+        if "ORD" in message.upper():
+            # Extract the order ID (e.g., "ORD123")
+            words = message.split()
+            order_id = next((word for word in words if word.startswith("ORD")), None)
             
+            if order_id:
+                # Check if the order ID exists in the database
+                if order_id in self.order_database:
+                    return self.check_order_status(order_id)
+                else:
+                    return "Sorry, I couldn't find that order. Please check the order ID and try again."
+            else:
+                return "It seems you mentioned an order, but I couldn't detect a valid order ID. Please provide a valid order ID."
+        
+        # For all other queries, delegate to the LLM
+        response = self.conversation.predict(input=message)
         return response
+
+
     def save_contact_info(self) -> None:
         """Save the collected contact information to CSV file."""
         filename = "customer_requests.csv"
