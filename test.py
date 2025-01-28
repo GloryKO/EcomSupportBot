@@ -26,7 +26,7 @@ class TestEcommerceSupport(unittest.TestCase):
         response = self.chatbot.process_message("What is your return policy?")
         self.assertIn("30 days of purchase", response)
     
-    @patch('ecom_support.ConversationChain.predict')  # Correct target
+    @patch('ecom_support.ConversationChain.predict')  
     def test_human_representative_request(self, mock_predict):
         # Mock response when a user requests a human representative
         mock_predict.return_value = "I'll connect you with a customer service representative. Please provide your full name."
@@ -42,9 +42,9 @@ class TestEcommerceSupport(unittest.TestCase):
         response = self.chatbot.process_message("What is the status of my order?")
         self.assertIn("couldn't detect a valid order ID", response)
 
-    @patch('ecom_support.ConversationChain.predict')  # Mock the LLM
+    @patch('ecom_support.ConversationChain.predict')  
     def test_invalid_order_id(self, mock_predict):
-        # Mock LLM response (irrelevant here since the logic bypasses LLM)
+       
         mock_predict.return_value = "This response should not be used."
 
         # Test invalid order ID handling
